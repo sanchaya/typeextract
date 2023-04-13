@@ -195,6 +195,16 @@ var bgImg = canvas.backgroundImage;
 
 
 
+var t1 = new fabric.Textbox('MyText', {
+  width: 150,
+  top: 5,
+  left: 5,
+  fontSize: 16,
+  textAlign: 'center',
+  fixedWidth: 150
+})
+
+
 var myButton = document.getElementById('my-button');
 
 var data_co;
@@ -226,6 +236,7 @@ myButton.addEventListener('click', function() {
       bounding_boxes.push(data_co)
     }
 
+    processArray(rects)
     console.log("bounding boxes",bounding_boxes)
 
     // var data_co = {
@@ -285,3 +296,105 @@ myButton.addEventListener('click', function() {
 // canvas2.setZoom(zoom_value);
 // canvas2.setWidth(CANVAS_WIDTH * zoom_value);
 // canvas2.setHeight(CANVAS_HEIGHT * zoom_value);
+
+
+
+
+
+// var tooltip = new fabric.Textbox('', {
+//   left: rect.left,
+//   top: rect.top - 30,
+//   width: 100,
+//   height: 30,
+//   visible: false,
+//   backgroundColor: 'white',
+//   borderColor: 'black',
+//   borderWidth: 1
+// });
+
+
+var something = [
+  {name: 'rect1',
+  left: 100,
+  top:50
+},
+{name: 'rect2',
+  left: 500,
+  top:150
+}
+]
+
+
+function tag(params) {
+  params.forEach(function (value, i) {
+
+      var div = document.createElement('div')
+      div.className = "input-group"
+      div.style.position = 'absolute'
+      div.style.top = (value.top + value.height +5) + 'px'
+      div.style.left = (value.left + 10) + 'px'
+      div.style.width = '25%'
+      // div.style.height = each.height + 'px'
+      div.innerHTML = `<input type='text' class='form-control input-group-prepend' id='usr'><button type='button' class='btn btn-success btn-sm' id='tag-${i}'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-check' viewBox='0 0 16 16'><path d='M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z'/></svg></button>`
+    
+      // var div = document.createElement('input')
+      // div.className = each.name + 'input'
+      // div.innerHTML = 'here'
+
+      // var button = document.createElement('button');
+      // button.type = 'button';
+      // button.className = 'btn btn-success btn-sm';
+      // button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>';
+      // div.appendChild(button);
+
+      var button = div.querySelector("button");
+      console.log("button",button)
+      button.addEventListener('click', function() {
+        // code to execute when button is clicked
+        // for example, you can call another function or do some other task
+        nextLoop();
+      });
+      var node = document.querySelector('.play')
+      node.appendChild(div)
+  })
+} 
+
+
+
+async function processArray(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const value = arr[i];
+
+    var div = document.createElement('div')
+    div.className = "input-group"
+    div.style.position = 'absolute'
+    div.style.top = (value.top + value.height +5) + 'px'
+    div.style.left = (value.left + 10) + 'px'
+    div.style.width = '25%'
+    // div.style.height = each.height + 'px'
+    div.innerHTML = `<input type='text' class='form-control input-group-prepend' id='usr'>
+        <button type='button' class='btn btn-success btn-sm' id='tag-${i}'>
+        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-check' viewBox='0 0 16 16'>
+        <path d='M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z'/>
+        </svg></button>`
+    
+      var node = document.querySelector('.play')
+      node.appendChild(div)
+      var tag_id = `tag-${i}`
+      await waitForButtonClick(div,tag_id);
+      var user_val = document.getElementById('usr').value
+      console.log("user_val",user_val)
+      console.log('input is given');
+      node.removeChild(div)
+    
+
+  }
+}
+
+function waitForButtonClick(div,tag_id) {
+  const btn = div.querySelector(`#${tag_id}`);
+  return new Promise(resolve => {
+    btn.addEventListener('click', resolve);
+  });
+}
+

@@ -20,3 +20,30 @@ html, body {
     max-height: 600px;
     max-width: 800px;
    } */
+
+   .tooltip {
+    position: absolute;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 999;
+  }
+  
+
+.play{
+    position: relative;
+    width: 90vh;
+    height: 90vh;
+
+}
+.rect1{
+    position: absolute;
+    left: 100px;
+    top: 50px;
+}
+.rect2{
+    position: absolute;
+    left: 500px;
+    top: 150px;
+}
