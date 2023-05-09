@@ -7,6 +7,9 @@ var rect, isDown, origX, origY;
 
 var fimg = new fabric.Image(image);
 
+var user_data = {} ;
+var sen_data =[];
+
 
 
 // canvas.setBackgroundImage(fimg, canvas.renderAll.bind(canvas))
@@ -224,7 +227,7 @@ myButton.addEventListener('click', function() {
     console.log("bounding boxes rects",rects)
 
     const bounding_boxes = [];
-
+    const user_val = []
 
     for (let x of rects) {
       var data_co = {
@@ -236,8 +239,73 @@ myButton.addEventListener('click', function() {
       bounding_boxes.push(data_co)
     }
 
-    processArray(rects)
+    sen_data.push(bounding_boxes)
+   
+
+    data_p =  processArray(rects).then((x) =>{
+      console.log(x);
+      sen_data.push(user_data);
+      send_rects()
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    })
+
+    // const rects_mod =null
+    // async function getdata() {
+    //   try {
+    //     const rects_mod =  processArray(rects);
+    //     console.log(rects_mod);
+    //     return rects_mod
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+
+
+    // console.log("rect_mod",getdata())
+
+  //   data_p =  processArray(rects).then(x => { 
+  //     console.log('x',x); 
+  // });
+  // const a = processArray(rects).then((response)=>re).
+  // then((rec)=>{
+  //   return rec;
+  // })
+
+  // var res_i;
+  // function getMul() {
+  // let res = processArray(rects)
+  // .then(res => {
+  //     console.log('rs:',res);
+  // }, failure => {
+  //     console.error(failure); //expected output: Oopsy...
+  // })
+  // }
+  // getMul()
+
+  // const data_p = () => {
+  //   processArray(rects).then((b) => {
+  //     console.log("b",b);
+  //   });
+  // };
+
+
+  //  const res_i = await this.processArray(rects);
+
+    // console.log("print rects",res_i)
     console.log("bounding boxes",bounding_boxes)
+
+    console.log("user_result",user_data)
+
+ 
+   
+
+    // sen_data.push(data_p) 
+    // console.log("print s",sen_data)
 
     // var data_co = {
     //   rectLeft: rects.left * scaleFactor,
@@ -248,24 +316,37 @@ myButton.addEventListener('click', function() {
     
 
 // Make an AJAX POST request to the Django server
-    $.ajax({
+
+
+});
+
+
+
+function send_rects(){
+  return new Promise((resolve, reject) => {
+  $.ajax({
     type: "POST",
     url: "image-process",
-    data: JSON.stringify(bounding_boxes),
+    data: JSON.stringify(sen_data),
     // beforeSend: function (xhr){
     //   xhr.setRequestHeader('X-CSRFToken', csrftoken);
     // },
     contentType: "application/json",
     dataType: "json",
     success: function(response) {
-      console.log(response);
+     // console.log(response);
+      resolve(response)
+      
     },
     error: function(xhr, status, error) {
-      console.log(error);
+    //  console.log(error);
+      reject(error)
     }
 });
-  
-});
+})
+}
+
+
 
 
 // console.log(data_co);
@@ -383,12 +464,15 @@ async function processArray(arr) {
       var tag_id = `tag-${i}`
       await waitForButtonClick(div,tag_id);
       var user_val = document.getElementById('usr').value
-      console.log("user_val",user_val)
+      // arr[i]['user_val'] = user_val
+      user_data[i] = user_val
+      console.log("user_vdd",user_data)
       console.log('input is given');
       node.removeChild(div)
-    
 
   }
+
+  // return arr
 }
 
 function waitForButtonClick(div,tag_id) {
